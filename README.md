@@ -4,5 +4,5 @@ Code2020.Scoala de programare avansata Sinaia
 * This is a repository for Code2020, Sinaia first edition 
 ### Team members
 * Florin Teodorescu Sr. Software Development Engineer
-* Stefan Ene (@Stefanene) Jr. Student 
+* Stefan Ene (@Stefanene) Student. Java developer  
 * Mihai Ene-Pietrosanu Project Manager (@mihaiep)
