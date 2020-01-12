@@ -6,15 +6,15 @@ import graphics.MazeCanvas;
 import graphics.MazeCanvas.Side;
 
 public class Explorer {
-    protected Maze _m;
     protected MazeCanvas _mc;
+    protected Maze _m;
 
     // Light-ish blue color marking the exploration path
     protected static Color _exploreColor = new Color(161, 224, 255);
     
-    public Explorer(Maze m, MazeCanvas mc) {
-        _m = m;
+    public Explorer(MazeCanvas mc, Maze m) {
         _mc = mc;
+        _m = m;
     }
 
     // Returns the opposite side of a given {side}
@@ -120,7 +120,7 @@ public class Explorer {
 
     // Runs the explorer and returns the result of the exploration
     public boolean run() {
-        boolean result = run(_m.getEnterCell(), Side.Center);
+        boolean result = run(_m.getEntryCell(), Side.Center);
 
         // after exploration restore the internal state of the maze
         for (int r = 0; r < _mc.getRows(); r++) {

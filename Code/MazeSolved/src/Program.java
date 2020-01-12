@@ -1,9 +1,9 @@
 import graphics.MazeCanvas;
 
 public class Program {
-    private static int NROWS = 32;
-    private static int NCOLS = 48;
-    private static int CELLSIZE = 20;
+    private static int NROWS = 96;
+    private static int NCOLS = 128;
+    private static int CELLSIZE = 8;
 
     public static void main(String[] args) {
         // create and open the maze canvas
@@ -23,12 +23,12 @@ public class Program {
         mc.pause();
         
         // generate a random maze
-        Generator g = new Generator(m, mc);
+        Generator g = new Generator(mc, m);
         g.run();
         mc.pause();
         
         // solve the maze
-        Solver s = new Solver(m, mc);
+        Solver s = new Solver(mc, m);
         s.run();
         mc.pause();
         

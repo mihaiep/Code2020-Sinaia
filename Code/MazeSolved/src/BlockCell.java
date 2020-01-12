@@ -1,9 +1,6 @@
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 import graphics.MazeCanvas;
-import graphics.MazeCanvas.Side;
 
 public class BlockCell extends ShadedCell {
     
@@ -16,11 +13,6 @@ public class BlockCell extends ShadedCell {
     @Override
     public boolean getVisited() {
         return true;
-    }
-    
-    @Override
-    public List<Side> getWalls() {
-        return new ArrayList<Side>();
     }
 
 }

@@ -10,8 +10,8 @@ public class Solver extends Explorer {
     // Light-ish yellow color marking the backtrack path
     private static final Color _trackColor = new Color(240, 240, 161);
 
-    public Solver(Maze m, MazeCanvas mc) {
-        super(m, mc);
+    public Solver(MazeCanvas mc, Maze m) {
+        super(mc, m);
         _exploreColor = _pathColor;
     }
     

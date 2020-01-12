@@ -4,8 +4,8 @@ import graphics.MazeCanvas.Side;
 
 public class Generator extends Explorer {
     
-    public Generator(Maze m, MazeCanvas mc) {
-        super(m, mc);
+    public Generator(MazeCanvas mc, Maze m) {
+        super(mc, m);
     }
     
     @Override
