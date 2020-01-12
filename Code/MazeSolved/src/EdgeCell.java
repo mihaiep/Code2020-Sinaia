@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import graphics.MazeCanvas;
@@ -11,9 +12,21 @@ public class EdgeCell extends ShadedCell {
     // Pale-red color for the shade of an edge cell
     private static final Color _edgeShadeColor = new Color(255, 224, 224);
 
-    public EdgeCell(MazeCanvas mc, int row, int col, List<Side> edges) {
+    public EdgeCell(MazeCanvas mc, int row, int col) {
         super(mc, row, col, _edgeShadeColor);
-        _edges = edges;
+        _edges = new ArrayList<Side>();
+        if (row == 0) {
+            _edges.add(Side.Top);
+        }
+        if (row == mc.getRows()-1) {
+            _edges.add(Side.Bottom);
+        }
+        if (col == 0) {
+            _edges.add(Side.Left);
+        }
+        if (col == mc.getCols()-1) {
+            _edges.add(Side.Right);
+        }
     }
     
     @Override

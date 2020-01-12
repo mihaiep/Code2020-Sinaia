@@ -1,14 +1,11 @@
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import graphics.MazeCanvas;
 import graphics.MazeCanvas.Side;
 
 public class Maze {
     private MazeCanvas _mc;
     private Cell[][] _grid;
-    private Cell _enterCell;
+    private Cell _entryCell;
     private Cell _exitCell;
 
     // Checkpoint 1 practice with MazeCanvas
@@ -44,25 +41,6 @@ public class Maze {
     }
 
     /**
-     * Returns a list of edge sides for a given row, col location.
-     * If the coordinates are interior to the grid, returns an empty list.
-     */
-    private List<Side> getEdges(int row, int col)  {
-        List<Side> edges = new ArrayList<Side>();
-        if (row == 0) {
-            edges.add(Side.Top);
-        } else if (row == getRows()-1) {
-            edges.add(Side.Bottom);
-        }
-        if (col == 0) {
-            edges.add(Side.Left);
-        } else if (col == getCols()-1) {
-            edges.add(Side.Right);
-        }
-        return edges;
-    }
-
-    /**
      * Constructs the maze object and provides it with the {mazeCanvas} GUI engine
      */
     public Maze(MazeCanvas mc) {
@@ -71,46 +49,31 @@ public class Maze {
     }
 
     /**
-     * Returns the number of rows in this maze.
-     */
-    public int getRows() {
-        return _grid.length;
-    }
-
-    /**
-     * Returns the number of columns in this maze
-     */
-    public int getCols() {
-        return _grid[0].length;
-    }
-
-    /**
      * Initialize the internal structure of the maze.
      */
     public void initialize() {
         // count how many edge cells are there in this maze
-        int nPerim = 2 * (getRows() + getCols()) - 4;
+        int nPerim = 2 * (_mc.getRows() + _mc.getCols()) - 4;
         // generate random entrance position: [0 .. (nPerim-1)]
         int nEnterPos = (int)(Math.random()*nPerim);
         // generate random exit position offset from nEnterPos: [1..(nPerim-2)]
         int nExitPos = (nEnterPos + (int)(Math.random() * (nPerim-2)) + 1) % nPerim;
 
         for (int r = 0; r < _grid.length; r++) {
-            for (int c = 0; c < _grid[0].length; c++) {
-                List<Side> edges = getEdges(r, c);
-                if (edges.size() > 0) {
+            for (int c = 0; c < _grid[r].length; c++) {
+                if (r == 0 || c == 0 || r == _grid.length-1 || c == _grid[r].length-1) {
                     if (nEnterPos == 0) {
-                        _enterCell = new EntryCell(_mc, r, c, edges);
-                        _grid[r][c] = _enterCell;
+                        _entryCell = new EntryCell(_mc, r, c);
+                        _grid[r][c] = _entryCell;
                     } else if (nExitPos == 0) {
-                        _exitCell = new ExitCell(_mc, r, c, edges);
+                        _exitCell = new ExitCell(_mc, r, c);
                         _grid[r][c] = _exitCell;
                     } else {
-                        _grid[r][c] = new EdgeCell(_mc, r, c, edges);
+                        _grid[r][c] = new EdgeCell(_mc, r, c);
                     }
                     nEnterPos--;
                     nExitPos--;
-                } else if (Math.random() < .02){
+                } else if (Math.random() < .05){
                     _grid[r][c] = new BlockCell(_mc, r, c);
                 } else {
                     _grid[r][c] = new Cell(_mc, r, c);
@@ -122,8 +85,8 @@ public class Maze {
     /**
      * Returns the entrance in the maze.
      */
-    public Cell getEnterCell() {
-        return _enterCell;
+    public Cell getEntryCell() {
+        return _entryCell;
     }
 
     /**
@@ -145,13 +108,13 @@ public class Maze {
      */
     public Cell getNeighbor(Cell cell, Side side) {
         Cell neighbor = null;
-        if (side == Side.Top) {
+        if (side == Side.Top && cell.getRow() > 0) {
             neighbor = _grid[cell.getRow()-1][cell.getCol()];
-        } else if (side == Side.Bottom) {
+        } else if (side == Side.Bottom && cell.getRow() < _mc.getRows()-1) {
             neighbor = _grid[cell.getRow()+1][cell.getCol()];
-        } else if (side == Side.Left) {
+        } else if (side == Side.Left && cell.getCol() > 0) {
             neighbor = _grid[cell.getRow()][cell.getCol()-1];
-        } else if (side == Side.Right) {
+        } else if (side == Side.Right && cell.getCol() < _mc.getCols()-1) {
             neighbor = _grid[cell.getRow()][cell.getCol()+1];
         }
         return neighbor;
