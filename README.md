@@ -1,9 +1,17 @@
-## Code2020-Sinaia
-Code2020.Scoala de programare avansata Sinaia
+# Code2020-Sinaia
+Code2020. Scoala de programare avansata Sinaia
+
+---
 ### Scope
-* This is a repository for Code2020, Sinaia first edition 
-### Team members
-**Contributors**
-* Florin Teodorescu (@Florinteo) Principal Development Lead and Sr. Software Development Engineer
-* Stefan Ene (@Stefanene) Student. Java developer  
-* Mihai Ene-Pietrosanu Project Manager (@mihaiep)
+This is repository is hosting documets and code shared only by the camp organizing staff.
+
+---
+### Team members - repo contributors
+* Mihai Ene-Pietrosanu (@MihaiEp) - Project Manager
+* Monica Ene-Pietrosanu (@MEnePie) - Speaker
+* Adrian Tindeche (@AdrianTindeche) - Speaker
+* Florin Teodorescu (@FlorinTeo) - Instructor
+* Stefan Ene (@StefanEne) - TA 
+* Alex Tindeche (@AlexTindeche) - TA
+* Vlad Burcea (@VladBurcea) - TA
+* Tudor Branga Peicu (@MTBrangaPeicu) - TA
