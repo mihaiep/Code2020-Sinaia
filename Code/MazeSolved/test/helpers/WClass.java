@@ -13,20 +13,44 @@ public abstract class WClass {
 
     protected String _className;
     protected Class _wrapC;
-    protected Constructor _wrapCtr;
+    protected Map<String, Constructor> _wrapCtors;
     protected Map<String, Method> _wrapMs;
     protected Object _wrapObj;
+    
+    @SuppressWarnings("deprecation")
+    private void loadClass() {
+        _wrapCtors = new HashMap<String, Constructor>();
+        for (Constructor ctor : _wrapC.getConstructors()) {
+            _wrapCtors.put(ctor.toString(), ctor);
+        }
+        _wrapMs = new HashMap<String, Method>();
+        for (Method m : _wrapC.getMethods()) {
+            _wrapMs.put(m.toString(), m);
+        }
+        for (Method m : _wrapC.getDeclaredMethods()) {
+            if (!_wrapMs.containsKey(m.toString())) {
+                _wrapMs.put(m.toString(), m);
+                if (!m.isAccessible()) {
+                    m.setAccessible(true);
+                }
+            }
+        }
+        for (Method m : _wrapC.getSuperclass().getDeclaredMethods()) {
+            if (!_wrapMs.containsKey(m.toString())) {
+                _wrapMs.put(m.toString(), m);
+                if (!m.isAccessible()) {
+                    m.setAccessible(true);
+                }
+            }
+        }
+    }
     
     //Region: Constructor/instantiate/newInstance sequence
     public WClass() {
         _className = this.getClass().getName().replace("helpers.", "");
         try {
             _wrapC = Class.forName(_className);
-            _wrapCtr = null;
-            _wrapMs = new HashMap<String, Method>();
-            for (Method m : _wrapC.getMethods()) {
-                _wrapMs.put(m.toString(), m);
-            }
+            loadClass();
             _wrapObj = null;
         } catch (Exception e) {
             fail(String.format("### Missing or invalid '%s' class definition.", _className));
@@ -36,11 +60,7 @@ public abstract class WClass {
     public WClass(Object o) {
         _className = o.getClass().getName();
         _wrapC = o.getClass();
-        _wrapCtr = null;
-        _wrapMs = new HashMap<String, Method>();
-        for (Method m : _wrapC.getMethods()) {
-            _wrapMs.put(m.toString(), m);
-        }
+        loadClass();
         _wrapObj = o;
     }
     
@@ -94,20 +114,25 @@ public abstract class WClass {
         }
     }
     
+    private static boolean checkDeclMatch(String pattern, String decl) {
+        String[] parts = pattern.split("\\*");
+        boolean matched = true;
+        int idx = 0;
+        for (int i = 0; matched && i < parts.length; i++) {
+            if (!parts[i].trim().isEmpty()) {
+                idx = decl.indexOf(parts[i], idx);
+                matched = (idx != -1);
+            }
+        }
+        return matched;
+    }
+    
     private static void checkAndMark(String actMethod, Map<String, Boolean> expMethods) {
         for(String expMethod : expMethods.keySet()) {
             if (!expMethods.get(expMethod)) {
-                String[] expParts = expMethod.split("\\*");
-                boolean matched = true;
-                int idx = 0;
-                for (int i = 0; matched && i < expParts.length; i++) {
-                    if (!expParts[i].trim().isEmpty()) {
-                        idx = actMethod.indexOf(expParts[i], idx);
-                        matched = (idx != -1);
-                    }
-                }
-                if (matched) {
+                if (checkDeclMatch(expMethod, actMethod)) {
                     expMethods.replace(expMethod, true);
+                    break;
                 }
             }
         }
@@ -117,8 +142,8 @@ public abstract class WClass {
         try {
             String[] chain = className.split(" extends ");
             checkChain(chain);
-            Class mazeC = Class.forName(chain[0]);
-            Class superC = mazeC.getSuperclass();
+            Class thisC = Class.forName(chain[0]);
+            Class superC = thisC.getSuperclass();
             
             if (decls.length > 0) {
                 Map<String, Boolean> mMap = new HashMap<String, Boolean>();
@@ -126,11 +151,11 @@ public abstract class WClass {
                     mMap.put(d, false);
                 }
 
-                for (Constructor c : mazeC.getConstructors()) {
+                for (Constructor c : thisC.getConstructors()) {
                     mMap.replace(c.toString(), true);
                 }
                 
-                for (Method m : mazeC.getDeclaredMethods()) {
+                for (Method m : thisC.getDeclaredMethods()) {
                     checkAndMark(m.toString(), mMap);
                 }
                 
@@ -149,10 +174,24 @@ public abstract class WClass {
         }
     }
     
-    public Method getMethod(String mDecl) {
+    public Constructor getCtor(String cDecl) {
+        assertTrue(
+                String.format("### Missing or invalid '%s' constructor declaration in class '%s'.", cDecl, _wrapC.getName()),
+                _wrapCtors.containsKey(cDecl));
+        return _wrapCtors.get(cDecl);
+    }
+    
+    public Method getMethod(String mPattern) {
+        String mDecl = null;
+        for (String m : _wrapMs.keySet()) {
+            if (checkDeclMatch(mPattern, m)) {
+                mDecl = m;
+                break;
+            }
+        }
         assertTrue(
                 String.format("### Missing or invalid '%s' method declaration in class '%s'.", mDecl, _wrapC.getName()),
-                _wrapMs.containsKey(mDecl));
+                mDecl != null);
         return _wrapMs.get(mDecl);
     }
 }

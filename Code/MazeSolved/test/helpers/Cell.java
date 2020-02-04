@@ -25,10 +25,9 @@ public class Cell extends WClass {
         _col = getCol();
     }
     
-    @SuppressWarnings("unchecked")
     protected void instantiate() throws Exception {
-        _wrapCtr = _wrapC.getConstructor(new Class[]{MazeCanvas.class, int.class, int.class});
-        _wrapObj = _wrapCtr.newInstance(_mc, _row, _col);
+        _wrapObj = getCtor("public Cell(graphics.MazeCanvas,int,int)")
+                .newInstance(_mc, _row, _col);
     }
     
     public static Cell newInstance(MazeCanvas mc, int row, int col) {
@@ -62,27 +61,31 @@ public class Cell extends WClass {
         super.invoke("public void Cell.setVisited(boolean)", visited);
     }
     
+    @SuppressWarnings("unchecked")
+    public List<Side> getPaths() {
+        return (List<Side>)super.invoke("public java.util.List *.getPaths()");
+    }
+    
     //Region: Test methods
     public void assertWalls(Side... sides) {
-        List<Side> extraSides = this.getWalls();
+        List<Side> wallSides = this.getWalls();
         List<Side> missedSides = new ArrayList<Side>();
         
         for(Side side : sides) {
-            if (!extraSides.contains(side)) {
-                missedSides.add(side);
+            if (wallSides.contains(side)) {
+                wallSides.remove(side);
             } else {
-                extraSides.remove(side);
+                missedSides.add(side);
             }
         }
         
-        if (extraSides.size() != 0 || missedSides.size() != 0) {
+        if (wallSides.size() != 0 || missedSides.size() != 0) {
             helpers.MazeCanvas hmc = (helpers.MazeCanvas) _mc;
             hmc.assertPause(
                     _row, _col,
-                    String.format("Incorrect walls in cell @[%d, %d]. Missed: '%s'; Extra '%s'.", 
-                            _row, _col,
+                    String.format("Incorrect walls in cell. Missed: '%s'; Extra '%s'.", 
                             missedSides.toString(),
-                            extraSides.toString()),
+                            wallSides.toString()),
                     false);
         }
     }
@@ -97,8 +100,7 @@ public class Cell extends WClass {
         }
         ((helpers.MazeCanvas) _mc).assertPause(
                 _row, _col,
-                String.format("Wrong cell type @[%d, %d]. Actual: %s; Expected: %s",
-                        _row, _col,
+                String.format("Wrong cell type. Actual: %s; Expected: %s",
                         getClass().getName(), types.toString()),
                 matched);
     }
