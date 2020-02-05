@@ -1,1 +1,7 @@
+*.class
+*/bin/*
+*.metadata/*
+*.recommenders/*
+*/~$*.docx
 /.metadata/
+/.recommenders/
