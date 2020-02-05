@@ -1,0 +1,6 @@
+*.vs/
+*.VC.db
+*/x64/*
+*/Debug/*
+*/Release/*
+*.vcxproj.user
