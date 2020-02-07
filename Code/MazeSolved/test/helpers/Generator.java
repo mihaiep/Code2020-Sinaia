@@ -38,4 +38,25 @@ public class Generator extends WClass {
     public Side getOpposite(Side side) {
         return (Side)super.invoke("* graphics.MazeCanvas$Side *.getOpposite(graphics.MazeCanvas$Side)", side);
     }
+    
+    public boolean onEnterCell(Cell cell, Side side) {
+        return (boolean)super.invoke("* boolean *.onEnterCell(Cell,graphics.MazeCanvas$Side)", cell.getInstance(), side);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Side> onGetNextSteps(Cell cell) {
+        return (List<Side>)super.invoke("* java.util.List *.onGetNextSteps(Cell)", cell.getInstance());
+    }
+    
+    public void onStepForward(Cell cell, Side side) {
+        super.invoke("* void *.onStepForward(Cell,graphics.MazeCanvas$Side)", cell.getInstance(), side);
+    }
+    
+    public void onStepBack(boolean done, Cell cell, Side side) {
+        super.invoke("* void *.onStepBack(boolean,Cell,graphics.MazeCanvas$Side)", done, cell.getInstance(), side);
+    }
+
+    public void onExitCell(boolean done, Cell cell, Side side) {
+        super.invoke("* void *.onExitCell(boolean,Cell,graphics.MazeCanvas$Side)", done, cell.getInstance(), side);
+    }
 }
