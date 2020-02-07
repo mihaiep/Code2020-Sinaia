@@ -13,10 +13,9 @@ public class EntryCell extends EdgeCell {
         super(mc, o);
     }
     
-    @SuppressWarnings("unchecked")
     protected void instantiate() throws Exception {
-        _wrapCtr = _wrapC.getConstructor(new Class[]{MazeCanvas.class, int.class, int.class});
-        _wrapObj = _wrapCtr.newInstance(_mc, _row, _col);
+        _wrapObj = getCtor("public EntryCell(graphics.MazeCanvas,int,int)")
+                .newInstance(_mc, _row, _col);
     }
     
     public static EdgeCell newInstance(MazeCanvas mc, int row, int col) {

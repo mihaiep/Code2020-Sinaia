@@ -120,14 +120,13 @@ public class Explorer {
 
     // Runs the explorer and returns the result of the exploration
     public boolean run() {
-        boolean result = run(_m.getEntryCell(), Side.Center);
-
-        // after exploration restore the internal state of the maze
+        // before exploration make sure "visited" flag is set to false on all cells
         for (int r = 0; r < _mc.getRows(); r++) {
             for (int c = 0; c < _mc.getCols(); c++) {
                 _m.getCell(r, c).setVisited(false);
             }
         }
+        boolean result = run(_m.getEntryCell(), Side.Center);
         return result;
     }
 }

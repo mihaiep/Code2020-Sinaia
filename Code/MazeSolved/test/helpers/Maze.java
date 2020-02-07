@@ -12,10 +12,9 @@ public class Maze extends WClass {
         _mc = mc;
     }
     
-    @SuppressWarnings("unchecked")
     protected void instantiate() throws Exception {
-        _wrapCtr = _wrapC.getConstructor(new Class[]{MazeCanvas.class});
-        _wrapObj = _wrapCtr.newInstance(_mc);
+        _wrapObj = getCtor("public Maze(graphics.MazeCanvas)")
+                .newInstance(_mc);
     }
     
     public static Maze newInstance(MazeCanvas mc) {

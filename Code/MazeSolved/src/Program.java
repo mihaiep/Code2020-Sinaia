@@ -1,9 +1,9 @@
 import graphics.MazeCanvas;
 
 public class Program {
-    private static int NROWS = 96;
-    private static int NCOLS = 128;
-    private static int CELLSIZE = 8;
+    private static int NROWS = 26;
+    private static int NCOLS = 38;
+    private static int CELLSIZE = 22;
 
     public static void main(String[] args) {
         // create and open the maze canvas

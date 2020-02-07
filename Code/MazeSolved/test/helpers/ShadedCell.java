@@ -17,10 +17,9 @@ public class ShadedCell extends Cell {
         super(mc, o);
     }
     
-    @SuppressWarnings("unchecked")
     protected void instantiate() throws Exception {
-        _wrapCtr = _wrapC.getConstructor(new Class[]{MazeCanvas.class, int.class, int.class, java.awt.Color.class});
-        _wrapObj = _wrapCtr.newInstance(_mc, _row, _col, _shadeColor);
+        _wrapObj = getCtor("public ShadedCell(graphics.MazeCanvas,int,int,java.awt.Color)")
+                .newInstance(_mc, _row, _col, _shadeColor);
     }
     
     public static ShadedCell newInstance(MazeCanvas mc, int row, int col, Color shadeColor) {

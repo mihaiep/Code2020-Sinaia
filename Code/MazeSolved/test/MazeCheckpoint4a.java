@@ -1,5 +1,12 @@
 import org.junit.Test;
+
 import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.runner.RunWith;
 
 import graphics.MazeCanvas.Side;
@@ -7,6 +14,7 @@ import helpers.Order;
 import helpers.OrderedRunner;
 import helpers.WClass;
 import helpers.Cell;
+import helpers.Generator;
 import helpers.BlockCell;
 import helpers.Maze;
 import helpers.MazeCanvas;
@@ -86,26 +94,26 @@ public class MazeCheckpoint4a {
         Cell c = m.getCell(0, 0);
         Cell n = m.getNeighbor(c, Side.Right);
         mc.assertPause(0, 0, 
-                String.format("Wrong Left neighbor: [%d, %d]; Expected [0, 1]", n.getRow(), n.getCol()),
+                "Wrong Left neighbor; Expected [0, 1]",
                 n.getRow()==0 && n.getCol()==1);
         n = m.getNeighbor(c, Side.Bottom);
         mc.assertPause(0, 0,
-                String.format("Wrong Bottom neighbor: [%d, %d]; Expected [1, 0]", n.getRow(), n.getCol()),
+                "Wrong Bottom neighbor; Expected [1, 0]",
                 n.getRow()==1 && n.getCol()==0);
         n = m.getNeighbor(c, Side.Top);
         if (n != null) {
             mc.assertPause(0, 0,
-                    String.format("Wrong Bottom neighbor: [%d, %d]; Expected (null)", n.getRow(), n.getCol()),
+                    "Wrong Bottom neighbor; Expected (null)",
                     n == null);
         }
         c = m.getCell(8, 9);
         n = m.getNeighbor(c, Side.Left);
         mc.assertPause(8, 9,
-                String.format("Wrong Left neighbor: [%d, %d]; Expected [8, 8]", n.getRow(), n.getCol()),
+                "Wrong Left neighbor; Expected [8, 8]",
                 n.getRow()==8 && n.getCol()==8);
         n = m.getNeighbor(c, Side.Top);
         mc.assertPause(8, 9,
-                String.format("Wrong Top neighbor: [%d, %d]; Expected [7, 9]", n.getRow(), n.getCol()),
+                "Wrong Top neighbor; Expected [7, 9]",
                 n.getRow()==7 && n.getCol()==9);
     }
     
@@ -118,5 +126,39 @@ public class MazeCheckpoint4a {
                 "* graphics.MazeCanvas$Side *.getOpposite(graphics.MazeCanvas$Side)",
                 "* boolean *.run(Cell,graphics.MazeCanvas$Side)",
                 "* boolean *.run()");
+    }
+    
+    @Test
+    @Order(order = 407)
+    public void testGenerator_shuffle() {
+        MazeCanvas mc = new MazeCanvas(12, 18, 24);
+        Maze m = Maze.newInstance(mc);
+        Generator g = Generator.newInstance(mc, m);
+        Side[] sides = {Side.Top, Side.Bottom, Side.Left, Side.Right, Side.Center};
+        List<Side> shuffledList = g.shuffle(new ArrayList<Side>(Arrays.asList(sides)));
+        assertTrue("Incorrect null result from Generator.shuffle()", shuffledList != null);
+        boolean shuffled = false;
+        for (int i = 0; !shuffled && i < sides.length; i++) {
+            int j = shuffledList.indexOf(sides[i]);
+            shuffled = (i != j);
+        }
+        assertTrue("Generator.shuffle() returned unchanged list.", shuffled);
+    }
+    
+    @Test
+    @Order(order = 408)
+    public void testGenerator_getOpposite() {
+        MazeCanvas mc = new MazeCanvas(12, 18, 24);
+        Maze m = Maze.newInstance(mc);
+        Generator g = Generator.newInstance(mc, m);
+        Side[] sides = {Side.Top, Side.Bottom, Side.Left, Side.Right, Side.Center};
+        Side[] oppSides = {Side.Bottom, Side.Top, Side.Right, Side.Left, Side.Center};
+        for (int i = 0; i < sides.length; i++) {
+            Side result = g.getOpposite(sides[i]);
+            assertTrue(
+                    String.format("Incorrect opposite of %s; Actual: %s; Expected: %s", 
+                            sides[i], result, oppSides[i]),
+                    result == oppSides[i]);
+        }
     }
 }
