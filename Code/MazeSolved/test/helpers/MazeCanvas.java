@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
-
 public class MazeCanvas extends graphics.MazeCanvas {
     
     private static final Side[] _allSides = {Side.Left, Side.Right, Side.Top, Side.Bottom };
@@ -146,12 +144,33 @@ public class MazeCanvas extends graphics.MazeCanvas {
             }
         }
         
-        if (extraWalls.size() != 0 || missedWalls.size() != 0) {
-            Assert.fail(String.format("Incorrect walls on canvas @[%d, %d]. Missed: '%s'; Extra '%s'.",
-                    row, col,
+        assertPause(
+                row, col,
+                String.format("Incorrect walls. Missed: '%s'; Extra '%s'.",
                     missedWalls.toString(),
-                    extraWalls.toString()));
+                    extraWalls.toString()),
+                extraWalls.size() == 0 && missedWalls.size() == 0);
+    }
+    
+    public void assertPaths(int row, int col, Side... paths) {
+        CellState cs = new CellState(row, col);
+        cs.getPathSides();
+        List<Side> extraPaths = new ArrayList<Side>(cs.PathSides.keySet());
+        List<Side> missedPaths = new ArrayList<Side>();
+        for (Side path : paths) {
+            if (!cs.PathSides.containsKey(path)) {
+                missedPaths.add(path);
+            } else {
+                extraPaths.remove(path);
+            }
         }
+        
+        assertPause(
+                row, col,
+                String.format("Incorrect paths. Missed: '%s'; Extra '%s'.",
+                    missedPaths.toString(),
+                    extraPaths.toString()),
+                extraPaths.size() == 0 && missedPaths.size() == 0);
     }
     
     public void assertShade(int row, int col, Color shadeColor) {

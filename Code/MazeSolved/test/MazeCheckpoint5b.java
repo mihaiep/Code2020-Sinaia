@@ -16,7 +16,7 @@ import helpers.Generator;
 import helpers.Solver;
 
 @RunWith(OrderedRunner.class)
-@Order(order = 420)
+@Order(order = 520)
 public class MazeCheckpoint5b {
 
     private static MazeCanvas mc;
