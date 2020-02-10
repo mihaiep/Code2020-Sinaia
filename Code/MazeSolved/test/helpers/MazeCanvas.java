@@ -88,6 +88,10 @@ public class MazeCanvas extends graphics.MazeCanvas {
     }
     
     public void assertPause(int row, int col, String message, boolean test) {
+        if (!test) {
+            CellState cs = new CellState(row, col);
+            cs.drawDbgFrame();
+        }
         assertPause(String.format("@[%d,%d] %s", row, col, message), test);
     }
     
