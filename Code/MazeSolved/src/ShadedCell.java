@@ -4,12 +4,12 @@ import graphics.MazeCanvas;
 
 public class ShadedCell extends Cell {
 
-    protected Color _shadeColor;
+    private Color _shadeColor;
     
     public ShadedCell(MazeCanvas mc, int row, int col, Color shadeColor) {
         super(mc, row, col);
         _shadeColor = shadeColor;
-        _mc.drawShade(row, col, _shadeColor);
+        mc.drawShade(row, col, _shadeColor);
     }
 
 }

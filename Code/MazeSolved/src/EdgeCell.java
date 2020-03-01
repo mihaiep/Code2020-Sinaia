@@ -6,25 +6,21 @@ import graphics.MazeCanvas;
 import graphics.MazeCanvas.Side;
 
 public class EdgeCell extends ShadedCell {
-    
-    protected List<Side> _edges;
 
     // Pale-red color for the shade of an edge cell
-    private static final Color _edgeShadeColor = new Color(255, 224, 224);
-
+    private static final Color _edgeColor = new Color(255, 224, 224);
+    private List<Side> _edges = new ArrayList<Side>();
+    
     public EdgeCell(MazeCanvas mc, int row, int col) {
-        super(mc, row, col, _edgeShadeColor);
-        _edges = new ArrayList<Side>();
+        super(mc, row, col, _edgeColor);
         if (row == 0) {
             _edges.add(Side.Top);
-        }
-        if (row == mc.getRows()-1) {
+        } else if (row == mc.getRows()-1) {
             _edges.add(Side.Bottom);
         }
         if (col == 0) {
             _edges.add(Side.Left);
-        }
-        if (col == mc.getCols()-1) {
+        } else if (col == mc.getCols()-1) {
             _edges.add(Side.Right);
         }
     }
@@ -41,8 +37,8 @@ public class EdgeCell extends ShadedCell {
     @Override
     public List<Side> getPaths() {
         List<Side> paths = super.getPaths();
-        for (Side edge : _edges) {
-            paths.remove(edge);
+        for (Side side : _edges) {
+            paths.remove(side);
         }
         return paths;
     }
